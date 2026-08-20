@@ -54,20 +54,54 @@ python generate_wxr.py
 
 Then import `wordpress_import.xml` via **Tools > Import > WordPress** in your admin dashboard.
 
+## Docker
+
+### Run with Docker
+
+```bash
+docker build -t image-cleaner .
+docker run -p 8501:8501 image-cleaner
+```
+
+### Run with Docker Compose
+
+```bash
+docker-compose up
+```
+
+## CI/CD
+
+GitHub Actions workflow runs on every push:
+
+- **Lint** — flake8 code quality checks
+- **Test** — verifies dependencies install correctly
+- **Docker** — builds and pushes image to GitHub Container Registry
+
+### Pull the Docker image
+
+```bash
+docker pull ghcr.io/tamsirdev/image-cleaner:latest
+```
+
 ## File Structure
 
 ```
 image-cleaner/
-├── image_cleaner_app.py   # Streamlit web app
-├── generate_wxr.py        # WordPress WXR importer
-├── requirements.txt       # Python dependencies
-└── README.md              # This file
+├── image_cleaner_app.py        # Streamlit web app
+├── generate_wxr.py             # WordPress WXR importer
+├── requirements.txt            # Python dependencies
+├── Dockerfile                  # Docker build file
+├── docker-compose.yml          # Docker Compose config
+├── .github/workflows/ci.yml   # GitHub Actions CI/CD
+└── README.md                   # This file
 ```
 
 ## Tech Stack
 
 - **Streamlit** — web framework
 - **Pillow** — image processing
+- **Docker** — containerization
+- **GitHub Actions** — CI/CD
 
 ## License
 
