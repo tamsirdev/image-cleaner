@@ -3,3 +3,10 @@ __pycache__/
 .env
 .DS_Store
 *.xml
+
+# Docker
+.dockerignore
+
+# IDE
+.vscode/
+.idea/
