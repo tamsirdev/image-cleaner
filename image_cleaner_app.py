@@ -66,6 +66,10 @@ st.markdown("""
         font-size: 1.5rem;
         font-weight: 700;
         margin: 0;
+        text-decoration: none;
+    }
+    .header-brand:hover {
+        opacity: 0.85;
     }
     .header-brand span {
         color: #667eea;
@@ -168,7 +172,7 @@ st.markdown("""
 st.markdown(f"""
 <div class="header-bar">
     <div>
-        <p class="header-brand">Tamsir<span>Dev</span></p>
+        <a href="https://tamsirdev.github.io/Personal-Portfolio" target="_blank" class="header-brand">Tamsir<span>Dev</span></a>
         <p class="header-tagline">Secure Image Processing Tool</p>
     </div>
     <div class="header-badge">v{APP_VERSION}</div>
