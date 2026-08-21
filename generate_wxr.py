@@ -1,5 +1,5 @@
 import re
-import html
+
 
 def parse_articles(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
@@ -57,6 +57,7 @@ def parse_articles(filepath):
 
     return articles
 
+
 def format_body_html(body):
     paragraphs = [p.strip() for p in re.split(r'\n\s*\n', body) if p.strip()]
     html_parts = []
@@ -65,8 +66,10 @@ def format_body_html(body):
         html_parts.append(f'<p>{p_clean}</p>')
     return '\n'.join(html_parts)
 
+
 def cdata(text):
     return f'<![CDATA[{text}]]>'
+
 
 def generate_wxr(articles, output_path):
     image_map = {
@@ -154,6 +157,7 @@ def generate_wxr(articles, output_path):
             continue
         img = image_map.get(article['title'], '')
         print(f"  - {article['title'][:70]} -> {img if img else '(no image)'}")
+
 
 if __name__ == '__main__':
     input_file = r'C:\Users\maste\Desktop\DOI\Website\Web stories Edition 60\Web stories Edition 60\Stories.txt'
