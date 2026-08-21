@@ -1,58 +1,65 @@
 # Image Cleaner for WordPress
 
-A simple web app to clean filenames, resize images to 1200x630, and download them as a ZIP for WordPress uploads.
+A secure web app to clean filenames, resize images, and download them ready for WordPress upload.
+
+**Live App:** https://imageclean.streamlit.app/
 
 ## Features
 
 - **Clean filenames** — removes spaces, special characters, converts to lowercase
-- **Resize to 1200x630** — standard WordPress featured image size
+- **Resize to target** — 1200x630, 1920x1080, 2560x1440, or custom dimensions
 - **Scale + pad** — maintains aspect ratio with white padding
-- **Keep original format** — JPEG stays JPEG, PNG stays PNG
+- **Format conversion** — keep original, all JPEG, or all PNG
 - **Adjustable quality** — JPEG compression slider (1-100)
 - **Preview** — see before/after comparison
 - **ZIP download** — download all processed images in one click
+- **Batch processing** — up to 50 images at once
+
+## Security
+
+- **EXIF metadata stripped** — removes GPS, camera info, hidden data
+- **Files re-encoded** — eliminates embedded payloads and steganography
+- **Magic bytes verified** — validates actual file content, not just extension
+- **No data stored** — all processing happens in-browser, nothing saved server-side
+- **File size limits** — max 20MB per file, 50 files per batch
 
 ## Quick Start
 
-### Prerequisites
+### Live (Recommended)
 
-- Python 3.8 or higher
+Just visit: **https://imageclean.streamlit.app/**
 
-### Installation
+No installation required.
+
+### Local
 
 ```bash
 git clone https://github.com/tamsirdev/image-cleaner.git
 cd image-cleaner
 pip install -r requirements.txt
-```
-
-### Run the App
-
-```bash
 streamlit run image_cleaner_app.py
 ```
 
-The app will open at `http://localhost:8501`
+Opens at `http://localhost:8501`
 
 ## Usage
 
 1. Open the app in your browser
-2. Click **Browse files** and select all images from your folder
-3. Adjust the **JPEG Quality** slider if needed (default: 85)
+2. Choose size preset in the sidebar (default: 1200x630)
+3. Upload images via drag & drop or file browser
 4. Click **Process Images**
 5. Preview the before/after results
-6. Click **Download All as ZIP**
-7. Extract the ZIP and upload to WordPress
+6. Click **Download as ZIP**
+7. Upload cleaned images to WordPress
 
-## WordPress Import (Bonus)
+## Size Presets
 
-The `generate_wxr.py` script creates a WordPress WXR import file from a text file of articles:
-
-```bash
-python generate_wxr.py
-```
-
-Then import `wordpress_import.xml` via **Tools > Import > WordPress** in your admin dashboard.
+| Preset | Dimensions | Best For |
+|--------|-----------|----------|
+| Featured Image | 1200 x 630 | WordPress posts, social media |
+| Full HD | 1920 x 1080 | Banners, hero images |
+| 2K | 2560 x 1440 | High-res displays |
+| Custom | Your choice | Specific requirements |
 
 ## Docker
 
@@ -69,19 +76,29 @@ docker run -p 8501:8501 image-cleaner
 docker-compose up
 ```
 
+### Pull from GitHub Container Registry
+
+```bash
+docker pull ghcr.io/tamsirdev/image-cleaner:latest
+```
+
 ## CI/CD
 
-GitHub Actions workflow runs on every push:
+GitHub Actions workflow runs on every push to `main`:
 
 - **Lint** — flake8 code quality checks
 - **Test** — verifies dependencies install correctly
 - **Docker** — builds and pushes image to GitHub Container Registry
 
-### Pull the Docker image
+## Presentations
+
+User guide for DOI staff:
 
 ```bash
-docker pull ghcr.io/tamsirdev/image-cleaner:latest
+start presentation/index.html
 ```
+
+Navigate with arrow keys. Press `F` for fullscreen.
 
 ## File Structure
 
@@ -92,6 +109,8 @@ image-cleaner/
 ├── requirements.txt            # Python dependencies
 ├── Dockerfile                  # Docker build file
 ├── docker-compose.yml          # Docker Compose config
+├── presentation/
+│   └── index.html              # User presentation (reveal.js)
 ├── .github/workflows/ci.yml   # GitHub Actions CI/CD
 └── README.md                   # This file
 ```
@@ -102,6 +121,14 @@ image-cleaner/
 - **Pillow** — image processing
 - **Docker** — containerization
 - **GitHub Actions** — CI/CD
+- **reveal.js** — presentation slides
+
+## Author
+
+**Tamsir Njie** — ICT Officer, Department of Information
+
+- GitHub: [tamsirdev](https://github.com/tamsirdev)
+- Portfolio: [tamsirdev.github.io](https://tamsirdev.github.io/Personal-Portfolio)
 
 ## License
 
