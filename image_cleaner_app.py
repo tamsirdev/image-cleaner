@@ -4,9 +4,11 @@ import io
 import os
 import re
 import zipfile
-import hashlib
 
-st.set_page_config(page_title="Image Cleaner", page_icon="🧹", layout="wide")
+APP_VERSION = "1.0.0"
+APP_UPDATED = "August 2026"
+
+st.set_page_config(page_title="TamsirDev Image Cleaner", page_icon="🧹", layout="wide")
 
 MAX_FILE_SIZE_MB = 20
 MAX_FILE_COUNT = 50
@@ -25,62 +27,127 @@ ALLOWED_MAGIC = set(MAGIC_BYTES.values())
 
 st.markdown("""
 <style>
-    .main-header {
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0;
+    .header-bar {
+        background: #1a1a2e;
+        padding: 1rem 2rem;
+        margin: -1rem -1rem 1.5rem -1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
-    .sub-header {
-        color: #666;
-        font-size: 1.1rem;
-        margin-top: 0;
+    .header-brand {
+        color: #ffffff;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+    }
+    .header-brand span {
+        color: #667eea;
+    }
+    .header-tagline {
+        color: #8892b0;
+        font-size: 0.85rem;
+        margin: 0;
+    }
+    .header-badge {
+        background: #1e3a5f;
+        color: #64ffda;
+        padding: 0.3rem 0.8rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-family: monospace;
+    }
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #1a1a2e;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 0.3rem;
+        margin-top: 1.5rem;
     }
     .stat-box {
         background: #f8f9fa;
-        border-radius: 10px;
+        border-radius: 8px;
         padding: 1rem;
         text-align: center;
         border: 1px solid #e9ecef;
     }
     .stat-number {
-        font-size: 2rem;
+        font-size: 1.8rem;
         font-weight: 700;
-        color: #667eea;
+        color: #1a1a2e;
     }
     .stat-label {
         color: #666;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     .security-badge {
         background: #d4edda;
         color: #155724;
         padding: 0.3rem 0.8rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
         display: inline-block;
         margin-bottom: 1rem;
+        font-family: monospace;
+    }
+    .footer {
+        background: #1a1a2e;
+        color: #8892b0;
+        padding: 1.5rem 2rem;
+        margin: 2rem -1rem -1rem -1rem;
+        font-size: 0.8rem;
+    }
+    .footer a {
+        color: #667eea;
+        text-decoration: none;
+    }
+    .footer a:hover {
+        text-decoration: underline;
+    }
+    .footer-section {
+        margin-bottom: 0.8rem;
+    }
+    .footer-title {
+        color: #ffffff;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+    }
+    .footer-divider {
+        border-top: 1px solid #2d2d44;
+        margin: 0.8rem 0;
     }
     div[data-testid="stDownloadButton"] > button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #1a1a2e;
         color: white;
         border: none;
         padding: 0.75rem 2rem;
-        font-size: 1.1rem;
-        border-radius: 8px;
+        font-size: 1rem;
+        border-radius: 6px;
         width: 100%;
+        font-weight: 600;
     }
     div[data-testid="stDownloadButton"] > button:hover {
-        opacity: 0.9;
+        background: #2d2d44;
     }
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<p class="main-header">Image Cleaner</p>', unsafe_allow_html=True)
-st.markdown('<p class="sub-header">Clean filenames + resize + download for WordPress</p>', unsafe_allow_html=True)
-st.markdown('<span class="security-badge">Security: EXIF stripped | Files re-encoded | Magic bytes verified</span>', unsafe_allow_html=True)
+st.markdown(f"""
+<div class="header-bar">
+    <div>
+        <p class="header-brand">Tamsir<span>Dev</span></p>
+        <p class="header-tagline">Secure Image Processing Tool</p>
+    </div>
+    <div class="header-badge">v{APP_VERSION}</div>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("## Image Cleaner")
+st.markdown("Clean filenames, resize to target dimensions, and download images ready for WordPress upload.")
+st.markdown('<span class="security-badge">EXIF Stripped | Files Re-encoded | Magic Bytes Verified | No Data Stored</span>', unsafe_allow_html=True)
 
 
 def detect_image_type(file_bytes):
@@ -161,7 +228,7 @@ def resize_with_padding(img, target_w, target_h):
 
 
 with st.sidebar:
-    st.markdown("### Settings")
+    st.markdown("### Configuration")
 
     st.markdown("#### Target Size")
     size_option = st.selectbox(
@@ -195,23 +262,25 @@ with st.sidebar:
 
     st.divider()
 
-    st.markdown("#### Security")
-    st.code(
-        f"Max file size: {MAX_FILE_SIZE_MB}MB\n"
-        f"Max files: {MAX_FILE_COUNT}\n"
-        "EXIF data: stripped\n"
-        "Files: re-encoded\n"
-        "Magic bytes: verified",
-        language=None,
-    )
+    st.markdown("#### Security Limits")
+    st.caption(f"Max file size: {MAX_FILE_SIZE_MB}MB")
+    st.caption(f"Max files per batch: {MAX_FILE_COUNT}")
+    st.caption("EXIF metadata: stripped")
+    st.caption("Image re-encoding: enabled")
+    st.caption("Magic bytes: verified")
 
     st.divider()
 
-    st.markdown("#### Filename Cleaning")
-    st.code("Spaces -> hyphens\nSpecial chars -> removed\nLowercase applied", language=None)
+    st.markdown("#### Filename Rules")
+    st.caption("Spaces replaced with hyphens")
+    st.caption("Special characters removed")
+    st.caption("Lowercase applied")
+    st.caption("Max 100 characters")
 
 
 st.divider()
+
+st.markdown('<p class="section-title">Upload Images</p>', unsafe_allow_html=True)
 
 uploaded_files = st.file_uploader(
     "Drop images here or click to browse",
@@ -222,16 +291,16 @@ uploaded_files = st.file_uploader(
 
 if uploaded_files:
     if len(uploaded_files) > MAX_FILE_COUNT:
-        st.error(f"Too many files ({len(uploaded_files)} > {MAX_FILE_COUNT}). Please reduce to {MAX_FILE_COUNT} or fewer.")
+        st.error(f"Too many files ({len(uploaded_files)} > {MAX_FILE_COUNT}). Maximum allowed is {MAX_FILE_COUNT} files per batch.")
         uploaded_files = None
     else:
-        st.markdown(f"**{len(uploaded_files)}** images ready to process")
+        st.markdown(f"**{len(uploaded_files)}** images loaded and ready for processing")
 
 if uploaded_files and st.button("Process Images", type="primary", use_container_width=True):
     results = []
     skipped = []
 
-    progress_bar = st.progress(0, text="Starting...")
+    progress_bar = st.progress(0, text="Initializing...")
 
     for i, uploaded in enumerate(uploaded_files):
         progress_bar.progress(
@@ -266,25 +335,27 @@ if uploaded_files and st.button("Process Images", type="primary", use_container_
     progress_bar.empty()
 
     if skipped:
-        st.warning(f"Skipped {len(skipped)} files:")
+        st.warning(f"Skipped {len(skipped)} file(s):")
         for name, reason in skipped:
             st.caption(f"  - **{name}**: {reason}")
 
     if results:
         st.divider()
 
+        st.markdown('<p class="section-title">Results</p>', unsafe_allow_html=True)
+
         total_orig_kb = sum(r[4] for r in results)
         total_new_kb = sum(r[5] for r in results)
         saved = total_orig_kb - total_new_kb
 
         c1, c2, c3, c4 = st.columns(4)
-        c1.markdown(f'<div class="stat-box"><div class="stat-number">{len(results)}</div><div class="stat-label">Images Processed</div></div>', unsafe_allow_html=True)
+        c1.markdown(f'<div class="stat-box"><div class="stat-number">{len(results)}</div><div class="stat-label">Processed</div></div>', unsafe_allow_html=True)
         c2.markdown(f'<div class="stat-box"><div class="stat-number">{target_w}x{target_h}</div><div class="stat-label">Output Size</div></div>', unsafe_allow_html=True)
         c3.markdown(f'<div class="stat-box"><div class="stat-number">{total_new_kb:.0f} KB</div><div class="stat-label">Total Size</div></div>', unsafe_allow_html=True)
         c4.markdown(f'<div class="stat-box"><div class="stat-number">{saved:+.0f} KB</div><div class="stat-label">Size Change</div></div>', unsafe_allow_html=True)
 
         st.divider()
-        st.markdown("### Preview")
+        st.markdown('<p class="section-title">Preview</p>', unsafe_allow_html=True)
 
         for idx in range(0, len(results), 2):
             cols = st.columns(4)
@@ -318,3 +389,21 @@ if uploaded_files and st.button("Process Images", type="primary", use_container_
             type="primary",
             use_container_width=True,
         )
+
+st.markdown(f"""
+<div class="footer">
+    <div class="footer-section">
+        <div class="footer-title">Security Policy</div>
+        All uploaded images are processed in memory and never stored on the server. Files are re-encoded to strip embedded payloads. EXIF metadata (GPS, camera info, hidden data) is removed. Magic bytes are verified to confirm file type.
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-section">
+        <div class="footer-title">File Limits</div>
+        Maximum {MAX_FILE_SIZE_MB}MB per file | Maximum {MAX_FILE_COUNT} files per batch | Supported: JPEG, PNG, WebP, BMP, TIFF
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-section">
+        Version {APP_VERSION} | Last updated {APP_UPDATED} | <a href="https://github.com/tamsirdev/image-cleaner" target="_blank">GitHub</a> | &copy; 2026 Tamsir Njie. All rights reserved.
+    </div>
+</div>
+""", unsafe_allow_html=True)
