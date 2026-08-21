@@ -27,13 +27,39 @@ ALLOWED_MAGIC = set(MAGIC_BYTES.values())
 
 st.markdown("""
 <style>
+    #MainMenu, footer, header[data-testid="stHeader"] {
+        display: none !important;
+    }
+    .block-container {
+        padding-top: 0 !important;
+    }
+    header[data-testid="stHeader"] {
+        display: none !important;
+    }
+    [data-testid="stToolbar"] {
+        display: none !important;
+    }
+    [data-testid="stDecoration"] {
+        display: none !important;
+    }
+    # Deploy button
+    div[data-testid="stDeployButton"] {
+        display: none !important;
+    }
+    section[data-testid="stSidebar"] {
+        border-right: 1px solid #e9ecef;
+    }
     .header-bar {
+        position: sticky;
+        top: 0;
+        z-index: 999;
         background: #1a1a2e;
         padding: 1rem 2rem;
-        margin: -1rem -1rem 1.5rem -1rem;
+        margin: 0 -1rem 1.5rem -1rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     }
     .header-brand {
         color: #ffffff;
@@ -94,11 +120,15 @@ st.markdown("""
         font-family: monospace;
     }
     .footer {
+        position: sticky;
+        bottom: 0;
+        z-index: 999;
         background: #1a1a2e;
         color: #8892b0;
         padding: 1.5rem 2rem;
-        margin: 2rem -1rem -1rem -1rem;
+        margin: 2rem -1rem 0 -1rem;
         font-size: 0.8rem;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
     }
     .footer a {
         color: #667eea;
