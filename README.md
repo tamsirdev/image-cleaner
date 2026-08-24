@@ -2,7 +2,7 @@
 
 A secure web app to clean filenames, resize images, and download them ready for WordPress upload.
 
-**Live App:** https://imageclean.streamlit.app/
+**Live App:** https://doisimagecleaner.streamlit.app/
 
 ## Features
 
@@ -27,7 +27,7 @@ A secure web app to clean filenames, resize images, and download them ready for 
 
 ### Live (Recommended)
 
-Just visit: **https://imageclean.streamlit.app/**
+Just visit: **https://doisimagecleaner.streamlit.app/**
 
 No installation required.
 
